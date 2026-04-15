@@ -1,7 +1,8 @@
 const CONFIG = {
   API_BASE_URL: 'https://script.google.com/macros/s/AKfycbzrXF0uWFMry_gZBTetDPyj-mKZtrEWU5Oq3Kz_ZlzcRApumP2tpLUOL9a7b7mIZV8cFQ/exec'
 ,
-  TARGET_RATIO: 8
+  TARGET_RATIO: 8,
+  CURRENT_FIRST_YEAR_COHORT: 68
 };
 
 const state = {
@@ -98,7 +99,7 @@ function renderAll() {
   renderKpis(scenarioKpis);
   renderGauge(scenarioKpis);
   renderStudentsByCohort(state.raw.charts.studentsByCohort || []);
-  renderComparisonChart(state.raw.charts.cohortComparison || [], scenarioKpis);
+  renderComparisonChart(state.raw.charts.cohortComparison || []);
   renderRetentionChart(state.raw.charts.retentionByCohort || []);
 }
 
@@ -153,7 +154,7 @@ function renderStudentsByCohort(items) {
     const width = Math.max(8, (item.currentCount / max) * 100);
     return `
       <div class="bar-row thai">
-        <div class="bar-label">ชั้นปี ${escapeHtml(item.cohort)}</div>
+        <div class="bar-label">${escapeHtml(getStudyYearLabel(item.cohort))}</div>
         <div class="bar-track"><div class="bar-fill" style="width:${width}%"></div></div>
         <div class="bar-value">${formatNumber(item.currentCount)} คน</div>
       </div>
@@ -161,7 +162,7 @@ function renderStudentsByCohort(items) {
   }).join('');
 }
 
-function renderComparisonChart(items, scenarioKpis) {
+function renderComparisonChart(items) {
   const el = document.getElementById('comparisonChart');
   if (!el) return;
   if (!items.length) {
@@ -169,21 +170,14 @@ function renderComparisonChart(items, scenarioKpis) {
     return;
   }
 
-  const scenarioBar = {
-    cohort: 'จำลองรับใหม่',
-    count: scenarioKpis.plannedNewIntake
-  };
+  const max = Math.max(...items.map(x => x.count), 1);
 
-  const merged = [...items, scenarioBar];
-  const max = Math.max(...merged.map(x => x.count), 1);
-
-  el.innerHTML = merged.map(item => {
+  el.innerHTML = items.map(item => {
     const width = Math.max(8, (item.count / max) * 100);
-    const extraClass = item.cohort === 'จำลองรับใหม่' ? 'alt2' : 'alt';
     return `
       <div class="bar-row thai">
-        <div class="bar-label">${escapeHtml(item.cohort === 'จำลองรับใหม่' ? item.cohort : 'ชั้นปี ' + item.cohort)}</div>
-        <div class="bar-track"><div class="bar-fill ${extraClass}" style="width:${width}%"></div></div>
+        <div class="bar-label">${escapeHtml(getStudyYearLabel(item.cohort))}</div>
+        <div class="bar-track"><div class="bar-fill alt" style="width:${width}%"></div></div>
         <div class="bar-value">${formatNumber(item.count)} คน</div>
       </div>
     `;
@@ -201,7 +195,7 @@ function renderRetentionChart(items) {
   el.innerHTML = items.map(item => `
     <div class="retention-row">
       <div class="retention-head">
-        <div class="retention-title">ชั้นปี ${escapeHtml(item.cohort)}</div>
+        <div class="retention-title">${escapeHtml(getStudyYearLabel(item.cohort))}</div>
         <div class="retention-value">${Number(item.retentionRate || 0).toFixed(2)}%</div>
       </div>
       <div class="retention-track">
@@ -258,6 +252,19 @@ function escapeHtml(value) {
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;');
 }
+function getStudyYearLabel(cohortValue) {
+  const cohort = Number(cohortValue);
+  if (!Number.isFinite(cohort)) return `รุ่น ${cohortValue}`;
+
+  const studyYear = CONFIG.CURRENT_FIRST_YEAR_COHORT - cohort + 1;
+
+  if (studyYear >= 1 && studyYear <= 10) {
+    return `ชั้นปีที่ ${studyYear}`;
+  }
+
+  return `รุ่น ${cohortValue}`;
+}
+
 
 function showLoading(isLoading) {
   const el = document.getElementById('loadingState');
