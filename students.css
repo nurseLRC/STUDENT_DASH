@@ -16,6 +16,7 @@ body{
   font-family:'IBM Plex Sans Thai',sans-serif;
   background:var(--bg);
   color:var(--text);
+  text-rendering:optimizeSpeed;
 }
 
 /* ================== LAYOUT ================== */
@@ -71,6 +72,8 @@ body{
   border-radius:16px;
   padding:16px;
   box-shadow:var(--shadow);
+  content-visibility:auto;
+  contain-intrinsic-size:120px;
 }
 
 .kpi-label{
@@ -103,6 +106,8 @@ body{
 
   display:flex;
   flex-direction:column;
+  content-visibility:auto;
+  contain-intrinsic-size:320px;
 }
 
 .panel-head{

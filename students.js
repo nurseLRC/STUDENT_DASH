@@ -1,37 +1,59 @@
 const CONFIG = {
   API_BASE_URL: 'https://script.google.com/macros/s/AKfycbzrXF0uWFMry_gZBTetDPyj-mKZtrEWU5Oq3Kz_ZlzcRApumP2tpLUOL9a7b7mIZV8cFQ/exec',
-  CURRENT_FIRST_YEAR_COHORT: 68
+  CURRENT_FIRST_YEAR_COHORT: 68,
+  CACHE_KEY: 'student-dashboard-students-cache-v1',
+  CACHE_TTL_MS: 5 * 60 * 1000
 };
 
 const state = {
-  raw: null
+  raw: null,
+  loadingTimer: null
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('btnRefresh')?.addEventListener('click', loadDashboard);
+  document.getElementById('btnRefresh')?.addEventListener('click', () => loadDashboard({ forceRefresh: true }));
   loadDashboard();
 });
 
-async function loadDashboard() {
-  showLoading(true);
+async function loadDashboard(options = {}) {
+  const { forceRefresh = false } = options;
+  const cached = !forceRefresh ? readCachedDashboard() : null;
+
+  if (cached) {
+    hydrateDashboard(cached);
+    showLoading(false);
+  } else {
+    showLoading(true);
+  }
 
   try {
-    const url = `${CONFIG.API_BASE_URL}?action=dashboard&_ts=${Date.now()}`;
-    const res = await fetch(url);
+    const url = forceRefresh
+      ? `${CONFIG.API_BASE_URL}?action=dashboard&_ts=${Date.now()}`
+      : `${CONFIG.API_BASE_URL}?action=dashboard`;
+    const res = await fetch(url, {
+      cache: forceRefresh ? 'no-store' : 'default'
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const data = await res.json();
     if (!data.success) throw new Error(data.message || 'โหลดข้อมูลไม่สำเร็จ');
 
-    state.raw = data;
-    renderAll();
+    writeCachedDashboard(data);
+    hydrateDashboard(data);
     clearError();
   } catch (err) {
     console.error(err);
-    showError(err.message || 'โหลดข้อมูลไม่สำเร็จ');
+    if (!cached) {
+      showError(err.message || 'โหลดข้อมูลไม่สำเร็จ');
+    }
   } finally {
     showLoading(false);
   }
+}
+
+function hydrateDashboard(data) {
+  state.raw = data;
+  renderAll();
 }
 
 function renderAll() {
@@ -135,7 +157,23 @@ function escapeHtml(value) {
 function showLoading(isLoading) {
   const el = document.getElementById('loadingState');
   if (!el) return;
-  el.style.display = isLoading ? 'flex' : 'none';
+
+  if (isLoading) {
+    if (state.loadingTimer) return;
+
+    state.loadingTimer = setTimeout(() => {
+      el.style.display = 'flex';
+      state.loadingTimer = null;
+    }, 180);
+    return;
+  }
+
+  if (state.loadingTimer) {
+    clearTimeout(state.loadingTimer);
+    state.loadingTimer = null;
+  }
+
+  el.style.display = 'none';
 }
 
 function showError(message) {
@@ -150,4 +188,31 @@ function clearError() {
   if (!el) return;
   el.textContent = '';
   el.style.display = 'none';
+}
+
+function readCachedDashboard() {
+  try {
+    const raw = localStorage.getItem(CONFIG.CACHE_KEY);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    if (!parsed?.timestamp || !parsed?.data) return null;
+    if ((Date.now() - parsed.timestamp) > CONFIG.CACHE_TTL_MS) return null;
+
+    return parsed.data;
+  } catch (err) {
+    console.warn('Failed to read cached student dashboard', err);
+    return null;
+  }
+}
+
+function writeCachedDashboard(data) {
+  try {
+    localStorage.setItem(CONFIG.CACHE_KEY, JSON.stringify({
+      timestamp: Date.now(),
+      data
+    }));
+  } catch (err) {
+    console.warn('Failed to cache student dashboard', err);
+  }
 }
