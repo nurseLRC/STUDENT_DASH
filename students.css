@@ -93,6 +93,7 @@ body{
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:16px;
   margin-bottom:16px;
+  align-items:start;
 }
 
 /* ================== PANEL ================== */
@@ -388,18 +389,22 @@ body{
   }
 
   .vertical-chart{
-    display:grid;
-    grid-template-columns:1fr;
-    align-items:stretch;
-    justify-content:stretch;
-    gap:18px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:flex-start;
+    gap:12px;
+    min-height:220px;
+    padding:8px 2px 4px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
   }
 
   .vertical-bar-item{
-    width:100%;
-    min-width:0;
-    align-items:stretch;
-    justify-content:flex-start;
+    flex:0 0 72px;
+    min-width:72px;
+    align-items:center;
+    justify-content:flex-end;
   }
 
   .vertical-bar-value,
@@ -409,14 +414,14 @@ body{
 
   .vertical-bar-wrap{
     width:100%;
-    max-width:none;
-    height:56px;
-    align-items:center;
+    max-width:72px;
+    height:140px;
+    align-items:flex-end;
   }
 
   .vertical-bar{
-    height:100% !important;
     width:100%;
     max-width:none;
+    height:auto !important;
   }
 }
