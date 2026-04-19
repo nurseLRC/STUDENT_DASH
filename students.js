@@ -117,11 +117,46 @@ function renderRetentionChart(items) {
         <div class="retention-title">${escapeHtml(getStudyYearLabel(item.cohort))}</div>
         <div class="retention-value">${Number(item.retentionRate || 0).toFixed(2)}%</div>
       </div>
-      <div class="retention-track">
-        <div class="retention-fill" style="width:${Math.max(0, Math.min(100, Number(item.retentionRate || 0)))}%"></div>
+      <div class="retention-lines">
+        <div class="retention-line">
+          <div class="retention-line-head">
+            <span class="retention-line-label">
+              <span class="retention-dot retention-dot-target"></span>
+              100%
+            </span>
+            <span class="retention-line-value">เกณฑ์เต็ม</span>
+          </div>
+          <div class="retention-track retention-track-target">
+            <div class="retention-fill retention-fill-target" style="width:100%"></div>
+          </div>
+        </div>
+        <div class="retention-line">
+          <div class="retention-line-head">
+            <span class="retention-line-label">
+              <span class="retention-dot retention-dot-original"></span>
+              เดิม
+            </span>
+            <span class="retention-line-value">${formatNumber(item.originalCount)} คน</span>
+          </div>
+          <div class="retention-track retention-track-original">
+            <div class="retention-fill retention-fill-original" style="width:100%"></div>
+          </div>
+        </div>
+        <div class="retention-line">
+          <div class="retention-line-head">
+            <span class="retention-line-label">
+              <span class="retention-dot retention-dot-current"></span>
+              ปัจจุบัน
+            </span>
+            <span class="retention-line-value">${formatNumber(item.currentCount)} คน</span>
+          </div>
+          <div class="retention-track retention-track-current">
+            <div class="retention-fill retention-fill-current" style="width:${Math.max(0, Math.min(100, Number(item.retentionRate || 0)))}%"></div>
+          </div>
+        </div>
       </div>
       <div class="retention-meta">
-        เดิม ${formatNumber(item.originalCount)} คน • ปัจจุบัน ${formatNumber(item.currentCount)} คน
+        อัตราการคงอยู่ ${Number(item.retentionRate || 0).toFixed(2)}%
       </div>
     </div>
   `).join('');
