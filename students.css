@@ -201,6 +201,10 @@ body{
   background:#fcfcff;
 }
 
+.retention-row-empty{
+  background:#f8fafc;
+}
+
 .retention-head{
   display:flex;
   justify-content:space-between;
@@ -269,6 +273,10 @@ body{
   background:#1d4ed8;
 }
 
+.retention-dot-empty{
+  background:#94a3b8;
+}
+
 .retention-track{
   height:12px;
   background:#edf0f6;
@@ -303,6 +311,14 @@ body{
 
 .retention-fill-current{
   background:linear-gradient(90deg,#1d4ed8,#2563eb);
+}
+
+.retention-track-empty{
+  background:#e7ebf0;
+}
+
+.retention-fill-empty{
+  background:linear-gradient(90deg,#9aa4b2,#b8c2cf);
 }
 
 .retention-meta{

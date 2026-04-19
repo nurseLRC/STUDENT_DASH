@@ -111,23 +111,29 @@ function renderRetentionChart(items) {
     return;
   }
 
-  el.innerHTML = items.map(item => `
-    <div class="retention-row">
+  el.innerHTML = items.map(item => {
+    const originalCount = Number(item.originalCount || 0);
+    const currentCount = Number(item.currentCount || 0);
+    const retentionRate = Math.max(0, Math.min(100, Number(item.retentionRate || 0)));
+    const hasRetentionData = originalCount > 0 || currentCount > 0;
+
+    return `
+    <div class="retention-row ${hasRetentionData ? '' : 'retention-row-empty'}">
       <div class="retention-head">
         <div class="retention-title">${escapeHtml(getStudyYearLabel(item.cohort))}</div>
-        <div class="retention-value">${Number(item.retentionRate || 0).toFixed(2)}%</div>
+        <div class="retention-value">${hasRetentionData ? `${retentionRate.toFixed(2)}%` : 'ยังไม่มีข้อมูล'}</div>
       </div>
       <div class="retention-lines">
         <div class="retention-line">
           <div class="retention-line-head">
             <span class="retention-line-label">
-              <span class="retention-dot retention-dot-target"></span>
+              <span class="retention-dot ${hasRetentionData ? 'retention-dot-target' : 'retention-dot-empty'}"></span>
               100%
             </span>
-            <span class="retention-line-value">เกณฑ์เต็ม</span>
+            <span class="retention-line-value">${hasRetentionData ? 'เกณฑ์เต็ม' : 'ยังไม่มีข้อมูล'}</span>
           </div>
-          <div class="retention-track retention-track-target">
-            <div class="retention-fill retention-fill-target" style="width:100%"></div>
+          <div class="retention-track ${hasRetentionData ? 'retention-track-target' : 'retention-track-empty'}">
+            <div class="retention-fill ${hasRetentionData ? 'retention-fill-target' : 'retention-fill-empty'}" style="width:100%"></div>
           </div>
         </div>
         <div class="retention-line">
@@ -136,7 +142,7 @@ function renderRetentionChart(items) {
               <span class="retention-dot retention-dot-original"></span>
               เดิม
             </span>
-            <span class="retention-line-value">${formatNumber(item.originalCount)} คน</span>
+            <span class="retention-line-value">${formatNumber(originalCount)} คน</span>
           </div>
           <div class="retention-track retention-track-original">
             <div class="retention-fill retention-fill-original" style="width:100%"></div>
@@ -145,21 +151,22 @@ function renderRetentionChart(items) {
         <div class="retention-line">
           <div class="retention-line-head">
             <span class="retention-line-label">
-              <span class="retention-dot retention-dot-current"></span>
+              <span class="retention-dot ${hasRetentionData ? 'retention-dot-current' : 'retention-dot-empty'}"></span>
               ปัจจุบัน
             </span>
-            <span class="retention-line-value">${formatNumber(item.currentCount)} คน</span>
+            <span class="retention-line-value">${formatNumber(currentCount)} คน</span>
           </div>
-          <div class="retention-track retention-track-current">
-            <div class="retention-fill retention-fill-current" style="width:${Math.max(0, Math.min(100, Number(item.retentionRate || 0)))}%"></div>
+          <div class="retention-track ${hasRetentionData ? 'retention-track-current' : 'retention-track-empty'}">
+            <div class="retention-fill ${hasRetentionData ? 'retention-fill-current' : 'retention-fill-empty'}" style="width:${hasRetentionData ? retentionRate : 100}%"></div>
           </div>
         </div>
       </div>
       <div class="retention-meta">
-        อัตราการคงอยู่ ${Number(item.retentionRate || 0).toFixed(2)}%
+        ${hasRetentionData ? `อัตราการคงอยู่ ${retentionRate.toFixed(2)}%` : 'รอข้อมูลนักศึกษารุ่นนี้'}
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function getStudyYearLabel(cohortValue) {
