@@ -1074,10 +1074,33 @@ function getTotalPages() {
  *   เช่น หน้า 2, pageSize 20 → return รายการที่ index 20 ถึง 39
  * -------------------------------------------------------------------------- */
 function getPagedData() {
-  if (pageSize === 'all') return filteredData;
+  const sortedData = getSortedTableData();
+
+  if (pageSize === 'all') return sortedData;
 
   const start = (currentPage - 1) * pageSize;
   const end = start + pageSize;
 
-  return filteredData.slice(start, end);
+  return sortedData.slice(start, end);
+}
+
+function getSortedTableData() {
+  return filteredData
+    .map((row, index) => ({ row, index }))
+    .sort((a, b) => {
+      const yearA = getSortableYear(a.row.YEAR);
+      const yearB = getSortableYear(b.row.YEAR);
+
+      if (yearA !== yearB) return yearB - yearA;
+
+      return a.index - b.index;
+    })
+    .map(item => item.row);
+}
+
+function getSortableYear(value) {
+  const match = String(value || '').match(/\d+/);
+  const year = match ? Number(match[0]) : Number.NEGATIVE_INFINITY;
+
+  return Number.isFinite(year) ? year : Number.NEGATIVE_INFINITY;
 }

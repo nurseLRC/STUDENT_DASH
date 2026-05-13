@@ -29,9 +29,12 @@
          ★ ปุ่ม "รีเซ็ตตัวกรอง" ลอยอยู่ที่มุมขวาล่าง (กำหนดใน style.css)
          ============================================================ -->
     <header class="header">
-      <div>
-        <h1>ระบบรายงานข้อมูลการเผยแพร่งานวิจัย</h1>
-        <p>คณะพยาบาลศาสตร์ มหาวิทยาลัยรามคำแหง</p>
+      <div class="header-brand">
+        <img class="header-logo" src="Logo.png" alt="ตราคณะพยาบาลศาสตร์" />
+        <div>
+          <h1>ระบบรายงานข้อมูลการเผยแพร่งานวิจัย</h1>
+          <p>คณะพยาบาลศาสตร์ มหาวิทยาลัยรามคำแหง</p>
+        </div>
       </div>
 
       <div id="floatingResetTools" class="floating-reset-tools">
@@ -125,12 +128,12 @@
          ★ คลิกที่กราฟแต่ละจุดจะกรองข้อมูลอัตโนมัติ (handleChartClick ใน app.js)
          ============================================================ -->
     <section class="chart-grid">
-      <div class="chart-card wide">
+      <div class="chart-card">
         <h3>แนวโน้มจำนวนงานวิจัยรายปี</h3>
         <canvas id="yearLineChart"></canvas>
       </div>
 
-      <div class="chart-card wide">
+      <div class="chart-card">
         <h3>จำนวนงานวิจัยแยกตามฐานข้อมูลรายปี</h3>
         <canvas id="indexBarChart"></canvas>
       </div>
@@ -145,17 +148,17 @@
         <canvas id="publishPieChart"></canvas>
       </div>
 
-      <div class="chart-card wide">
-        <h3>จำนวนเงินทุนแยกรายปี</h3>
-        <canvas id="fundingAmountChart"></canvas>
-      </div>
-
       <div class="chart-card">
         <h3>สัดส่วนงานวิจัยที่มีทุน / ไม่มีทุน</h3>
         <canvas id="fundingStatusChart"></canvas>
       </div>
 
-      <div class="chart-card full-width">
+      <div class="chart-card">
+        <h3>จำนวนเงินทุนแยกรายปี</h3>
+        <canvas id="fundingAmountChart"></canvas>
+      </div>
+
+      <div class="chart-card wide">
         <h3>จำนวนงานวิจัยแยกตามสาขาวิชา</h3>
         <canvas id="majorBarChart"></canvas>
       </div>
