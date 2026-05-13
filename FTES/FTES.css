@@ -385,3 +385,162 @@ html, body {
     max-height: none;
   }
 }
+
+/* Resch-aligned visual refresh */
+:root {
+  --bg: #f7f9fc;
+  --card: #ffffff;
+  --text: #1b2a3a;
+  --muted: #6b7a90;
+  --border: #dbe4ee;
+  --blue: #0d3b66;
+  --green: #168a55;
+  --teal: #0d6f7a;
+  --topbar: #0d3b66;
+  --gold-main: #d4a017;
+  --gold-soft: #fff7df;
+  --shadow: 0 10px 24px rgba(13, 59, 102, 0.08);
+  --radius: 20px;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  font-family: "IBM Plex Sans Thai", sans-serif;
+}
+
+.page {
+  width: 100%;
+  max-width: none;
+  min-height: auto;
+  margin: 0;
+  padding: 0 40px 24px;
+}
+
+.page-intro {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  margin: 0 -40px 16px;
+  padding: 8px 20px;
+  background: linear-gradient(135deg, #0d3b66 0%, #0a2f55 100%);
+  border-bottom: 3px solid var(--gold-main);
+  color: #fff;
+}
+
+.hero-title {
+  margin: 0;
+  color: #fff;
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.hero-text {
+  margin-top: 2px;
+  max-width: none;
+  color: #dbeafe;
+  font-size: 13px;
+}
+
+.card,
+.toolbar,
+.chart-card,
+.insight-card,
+.table-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: none;
+}
+
+.kpi-card,
+.kpi-card.blue,
+.kpi-card.green,
+.kpi-card.teal {
+  min-height: 132px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--gold-main);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+
+.kpi-card::after,
+.kpi-accent {
+  display: none;
+}
+
+.kpi-label,
+.kpi-sub,
+.section-meta,
+.toolbar-note {
+  color: var(--muted);
+}
+
+.kpi-value,
+.section-title {
+  color: #082b4d;
+}
+
+.field select {
+  border-color: var(--border);
+  background: #fff;
+  color: var(--text);
+}
+
+.field select:focus {
+  outline: 2px solid rgba(212, 160, 23, 0.22);
+  border-color: var(--gold-main);
+}
+
+.summary-table thead th {
+  background: var(--blue);
+  color: #fff;
+}
+
+.summary-table tbody tr:hover {
+  background: var(--gold-soft);
+}
+
+.chart-wrap {
+  background: #fbfdff;
+  border-color: var(--border);
+}
+
+.loading-box {
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.spinner {
+  border-top-color: var(--blue);
+}
+
+@media (max-width: 1024px) {
+  .page {
+    width: 100%;
+    padding: 0 28px 22px;
+  }
+
+  .page-intro {
+    margin: 0 -28px 14px;
+  }
+}
+
+@media (max-width: 720px) {
+  .page {
+    width: 100%;
+    padding: 0 20px 20px;
+  }
+
+  .page-intro {
+    margin: 0 -20px 12px;
+    padding: 10px;
+  }
+}

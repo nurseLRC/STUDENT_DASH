@@ -424,3 +424,153 @@ body{
     max-width:none;
   }
 }
+
+/* Resch-aligned visual refresh */
+:root{
+  --bg:#f7f9fc;
+  --panel:#ffffff;
+  --line:#dbe4ee;
+  --text:#1b2a3a;
+  --muted:#6b7a90;
+  --primary:#0d3b66;
+  --primary-2:#eaf2fb;
+  --gold-main:#d4a017;
+  --gold-soft:#fff7df;
+  --shadow:0 10px 24px rgba(13,59,102,.08);
+  --radius:20px;
+}
+
+html,
+body{
+  background:var(--bg);
+}
+
+body{
+  font-family:'IBM Plex Sans Thai',sans-serif;
+  color:var(--text);
+}
+
+.main-content{
+  width:100%;
+  max-width:none;
+  margin:0;
+  padding:0 40px 18px;
+}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  margin:0 -40px 16px;
+  padding:8px 20px;
+  background:linear-gradient(135deg,#0d3b66 0%,#0a2f55 100%);
+  border-bottom:3px solid var(--gold-main);
+  box-shadow:none;
+  color:#fff;
+}
+
+.page-title{
+  color:#fff;
+  font-size:22px;
+  line-height:1.25;
+}
+
+.eyebrow{
+  color:#dbeafe;
+  letter-spacing:0;
+}
+
+.ghost-btn{
+  min-height:42px;
+  border:0;
+  border-radius:999px;
+  padding:10px 18px;
+  background:var(--gold-main);
+  color:#fff;
+  font-weight:700;
+  box-shadow:0 8px 18px rgba(0,0,0,.12);
+}
+
+.kpi-grid{
+  gap:16px;
+  margin-bottom:18px;
+}
+
+.kpi-card,
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+.kpi-card{
+  border-top:4px solid var(--gold-main);
+}
+
+.kpi-label,
+.vertical-bar-label,
+.retention-label{
+  color:var(--muted);
+}
+
+.kpi-value,
+.vertical-bar-value,
+.retention-value{
+  color:var(--primary);
+}
+
+.panel-head h3{
+  color:#082b4d;
+  font-size:17px;
+}
+
+.panel-tag{
+  background:var(--primary-2);
+  color:var(--primary);
+  border:1px solid #cfe0f3;
+}
+
+.vertical-bar{
+  background:linear-gradient(180deg,#174f88 0%,#0d3b66 100%);
+}
+
+.retention-row{
+  background:#fbfdff;
+  border-color:var(--line);
+}
+
+.retention-bar{
+  background:#edf3fb;
+}
+
+.retention-fill{
+  background:linear-gradient(90deg,#d4a017 0%,#0d3b66 100%);
+}
+
+.loading-box,
+.error-banner{
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
+
+.spinner{
+  border-top-color:var(--primary);
+}
+
+@media (max-width: 680px){
+  .main-content{
+    padding:0 20px 14px;
+  }
+
+  .topbar{
+    align-items:flex-start;
+    flex-direction:column;
+    margin:0 -20px 12px;
+    padding:10px;
+  }
+
+  .ghost-btn{
+    width:100%;
+  }
+}

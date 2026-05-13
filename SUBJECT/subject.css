@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap');
+
 :root {
   --bg: #f3f6fb;
   --surface: #ffffff;
@@ -695,5 +697,181 @@ body {
   .year-tab {
     flex: 1 1 auto;
     text-align: center;
+  }
+}
+
+/* Resch-aligned visual refresh */
+:root {
+  --bg: #f7f9fc;
+  --surface: #ffffff;
+  --surface-soft: #fbfdff;
+  --border: #dbe4ee;
+  --text: #1b2a3a;
+  --muted: #6b7a90;
+  --primary: #0d3b66;
+  --primary-2: #174f88;
+  --gold-main: #d4a017;
+  --gold-soft: #fff7df;
+  --red: #b42318;
+  --green: #168a55;
+  --orange: #d4a017;
+  --teal: #0d6f7a;
+  --blue: #0d3b66;
+  --shadow: 0 10px 24px rgba(13, 59, 102, 0.08);
+  --radius: 20px;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "IBM Plex Sans Thai", sans-serif;
+}
+
+.app-shell {
+  width: 100%;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: linear-gradient(135deg, #0d3b66 0%, #0a2f55 100%);
+  border-bottom: 3px solid var(--gold-main);
+  box-shadow: none;
+}
+
+.topbar-inner {
+  max-width: none;
+  padding: 8px 40px;
+}
+
+.brand-title {
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.brand-subtitle {
+  margin-top: 2px;
+  font-size: 13px;
+}
+
+.container {
+  max-width: none;
+  padding: 16px 40px 24px;
+}
+
+.card,
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.toolbar {
+  background: var(--surface);
+}
+
+.toolbar label,
+.meta-label,
+.section-subtitle,
+.kpi-label,
+.kpi-unit {
+  color: var(--muted);
+}
+
+.toolbar select {
+  border-color: var(--border);
+  background: #fff;
+  color: var(--text);
+}
+
+.toolbar select:focus {
+  outline: 2px solid rgba(212, 160, 23, 0.22);
+  border-color: var(--gold-main);
+}
+
+.status-strip {
+  background: var(--surface);
+}
+
+.org-status-badge {
+  background: var(--gold-soft);
+  color: #8a5d00;
+}
+
+.kpi-card,
+.kpi-card.kpi-blue,
+.kpi-card.kpi-green,
+.kpi-card.kpi-orange,
+.kpi-card.kpi-red,
+.kpi-card.kpi-teal {
+  min-height: 132px;
+  background: #fff;
+  color: var(--text);
+  border-top: 4px solid var(--gold-main);
+}
+
+.kpi-value,
+.kpi-trend {
+  color: var(--primary);
+}
+
+.kpi-red .kpi-value {
+  color: var(--red);
+}
+
+.section-title {
+  color: #082b4d;
+}
+
+.year-tab {
+  border-color: var(--border);
+  color: var(--primary);
+}
+
+.year-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.data-table th {
+  background: var(--primary);
+  color: #fff;
+}
+
+.data-table tbody tr:hover {
+  background: var(--gold-soft);
+}
+
+.progress-fill,
+.year-bar-fill {
+  background: linear-gradient(90deg, #d4a017 0%, #0d3b66 100%);
+}
+
+.loading-box,
+.error-banner {
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.spinner {
+  border-top-color: var(--primary);
+}
+
+@media (max-width: 768px) {
+  .topbar-inner {
+    padding: 10px 20px;
+  }
+
+  .container {
+    padding: 14px 20px 20px;
+  }
+
+  .brand-title {
+    font-size: 20px;
   }
 }
