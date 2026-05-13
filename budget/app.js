@@ -30,15 +30,14 @@ function hydrateLoadingBlocks(root = document) {
     if (block.dataset.loadingHydrated === 'true') return;
     const label = block.dataset.loadingLabel || 'กำลังเตรียมข้อมูล...';
     block.dataset.loadingHydrated = 'true';
-    block.innerHTML = '<div class="loading-card"><div class="spinner-sm"></div><strong>' + escHtml(label) + '</strong></div>';
+    block.innerHTML = '<div class="loading-card"><span class="spinner-sm"></span><strong>' + escHtml(label) + '</strong></div>';
   });
 }
 
 // ── Budget dashboard module ───────────────────────────────────
 const BUDGET_API_URL_KEY = 'BUDGET_DASHBOARD_API_URL';
-const BUDGET_DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbw7tR53fQkOcOr-slYVimU9lq1QjgUDCacm6GVjkSs05pbPJriAMjb32YvYEVo1aLXL/exec';
+const BUDGET_DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbyKKEYiogeYm7bCYc26KAA_zHAfguQROfl-fUc5DRiawvnaCA4qMji0zuxOTKiiXqU1mQ/exec';
 const BUDGET_DEFAULT_YEAR = '2569';
-const BUDGET_API_TIMEOUT_MS = 12000;
 const budgetFmt = new Intl.NumberFormat('th-TH');
 const BUDGET_CATEGORY_COLOR_MAP = {
   'ก.แผนงานจัดการศึกษา (รวม)': '#4f46e5',
@@ -932,37 +931,21 @@ async function budgetApiGet(action, params = {}) {
   const url = new URL(localStorage.getItem(BUDGET_API_URL_KEY) || BUDGET_DEFAULT_API_URL);
   url.searchParams.set('action', action);
   Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
-  return budgetFetchJson_(url.toString(), { method: 'GET' });
+  const res = await fetch(url.toString(), { method: 'GET' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
 }
 
 async function budgetApiPost(action, body = {}) {
   const url = new URL(localStorage.getItem(BUDGET_API_URL_KEY) || BUDGET_DEFAULT_API_URL);
   url.searchParams.set('action', action);
-  return budgetFetchJson_(url.toString(), {
+  const res = await fetch(url.toString(), {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(body)
   });
-}
-
-async function budgetFetchJson_(url, options) {
-  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-  const timeoutId = controller ? window.setTimeout(() => controller.abort(), BUDGET_API_TIMEOUT_MS) : null;
-  try {
-    const res = await fetch(url, {
-      ...options,
-      signal: controller ? controller.signal : undefined
-    });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
-  } catch (err) {
-    if (err && err.name === 'AbortError') {
-      throw new Error('Budget API ใช้เวลาตอบนานเกินไป กรุณาตรวจสอบ Apps Script URL');
-    }
-    throw err;
-  } finally {
-    if (timeoutId) window.clearTimeout(timeoutId);
-  }
 }
 
 async function budgetApiGetCompat(action, params = {}) {
@@ -1186,18 +1169,10 @@ function budgetCalcRowAmount(row) {
   const categoryName = String(row.categoryName || '').trim();
   const rowType = String(row.rowType || '').toUpperCase();
   if (rowType === 'SUMMARY') return Number(row.finalTotal || row.totalIncome || row.totalExpense || 0);
-  if (budgetHasNumericValue_(row.inputAmount)) return Number(row.inputAmount);
-  if (budgetHasNumericValue_(row.amount)) return Number(row.amount);
-  if (budgetHasNumericValue_(row.finalTotal)) return Number(row.finalTotal);
   if (categoryName === 'ค่าธรรมเนียมการศึกษา') {
     return Number(row.studentCount || 0) * Number(row.feeRate || 0);
   }
-  return 0;
-}
-
-function budgetHasNumericValue_(value) {
-  if (value === undefined || value === null || value === '') return false;
-  return Number.isFinite(Number(value));
+  return Number(row.inputAmount || row.amount || row.finalTotal || 0);
 }
 
 function budgetNormalizeRowType(rowType, categoryName) {
@@ -1236,8 +1211,8 @@ async function budgetLoadForecastDashboards(baseYear) {
       budgetApiGetCompat('getBudgetDashboard', { budgetYear: year })
         .then(res => ({ year, res }))
         .catch(() => ({ year, res: null }))
-  );
-}
+    );
+  }
 
   if (!requests.length) {
     budgetUpdateCharts();
