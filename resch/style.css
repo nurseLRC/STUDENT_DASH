@@ -82,7 +82,7 @@ body.is-loading {
 .app {
   width: 100%;
   margin: 0;
-  padding: 0 80px 18px;
+  padding: 0 40px 18px;
 }
 
 /* แถบหัวเรื่อง – พื้น gradient น้ำเงินแบบบาร์ยาว
@@ -99,7 +99,7 @@ body.is-loading {
   justify-content: space-between;
   gap: 16px;
   align-items: center;
-  margin: 0 -80px 16px;
+  margin: 0 -40px 16px;
   box-shadow: none;
   border: none;
   border-bottom: 3px solid var(--gold-main);
@@ -763,13 +763,13 @@ td a:hover {
 
 @media (max-width: 680px) {
   .app {
-    padding: 0 40px 14px;
+    padding: 0 20px 14px;
   }
 
   .header {
     flex-direction: column;
     align-items: flex-start;
-    margin: 0 -40px 12px;
+    margin: 0 -20px 12px;
     padding: 10px;
   }
 
